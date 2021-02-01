@@ -102,6 +102,8 @@ static uint8_t decodeUint16(uint16_t raw)
 std::unique_ptr<Fluxmap> IbmEncoder::encode(
 	int physicalTrack, int physicalSide, const SectorSet& allSectors)
 {
+	if (_parameters.swapSides)
+		physicalSide = 1 - physicalSide;
 	double clockRateUs = 1e3 / _parameters.clockRateKhz;
 	if (!_parameters.useFm)
 		clockRateUs /= 2.0;
@@ -205,7 +207,6 @@ std::unique_ptr<Fluxmap> IbmEncoder::encode(
 
 			Bytes truncatedData = sectorData->data.slice(0, _parameters.sectorSize);
 			bw += truncatedData;
-			hexdump(std::cout, data.slice(0, 64));
 			uint16_t crc = crc16(CCITT_POLY, data);
 			bw.write_be16(crc);
 

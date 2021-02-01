@@ -74,6 +74,11 @@ static StringFlag sectorSkew(
 	"Order to emit sectors.",
 	"");
 
+static BoolFlag swapSides(
+	{ "--ibm-swap-sides" },
+	"Swap sides while writing. Needed for Commodore 1581, CMD FD-2000, Thomson TO7.",
+	false);
+
 static ActionFlag preset1440(
 	{ "--ibm-preset-1440" },
 	"Preset parameters to a 3.5\" 1440kB disk.",
@@ -88,7 +93,7 @@ static ActionFlag preset1440(
 		gap0.setDefaultValue(80);
 		gap1.setDefaultValue(50);
 		gap2.setDefaultValue(22);
-		gap3.setDefaultValue(108);
+		gap3.setDefaultValue(80);
 		sectorSkew.setDefaultValue("0123456789abcdefgh");
 	});
 
@@ -129,10 +134,10 @@ int mainWriteIbm(int argc, const char* argv[])
 	parameters.gap2 = gap2;
 	parameters.gap3 = gap3;
 	parameters.sectorSkew = sectorSkew;
+	parameters.swapSides = swapSides;
 
 	IbmEncoder encoder(parameters);
 	writeDiskCommand(encoder);
 
     return 0;
 }
-
